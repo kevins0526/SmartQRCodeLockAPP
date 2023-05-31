@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_item1"
+        android:icon="@drawable/ic_baseline_qr_code_24"
+        android:title="QRCODE"
+        android:fontFamily="@font/iansul"
+        />
+    <item
+        android:id="@+id/navigation_item2"
+        android:icon="@drawable/ic_baseline_access_time_24"
+        android:title="紀錄"
+        android:fontFamily="@font/iansul"/>
+    <item
+        android:id="@+id/navigation_item4"
+        android:icon="@drawable/ic_baseline_chat_24"
+        android:title="布告欄"
+        android:fontFamily="@font/iansul"/>
+    <item
+        android:id="@+id/navigation_item3"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="設定"
+        android:fontFamily="@font/iansul"/>
+</menu>

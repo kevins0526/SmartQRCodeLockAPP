@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/pic_02"
+    tools:context=".updateLockName">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="25dp"
+        android:background="@color/white"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="center">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/black"
+        android:text="哈囉!很高興見到你\n\n請先輸入門鎖代碼進行綁定喔!"
+        android:fontFamily="@font/iansul"
+        android:textSize="20dp"
+        android:gravity="center"/>
+        <TextView
+            android:id="@+id/tNowLockName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:textColor="@color/blue1"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/iansul"
+            android:text="" />
+        <EditText
+            android:id="@+id/eLockName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/edit_text_roundel"
+            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:fontFamily="@font/iansul"
+            android:hint="請輸入門鎖代碼"
+            android:inputType="textPersonName"
+            android:maxLength="11"
+            android:minHeight="48dp"
+            android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/updateLockName_Btn"
+        android:layout_width="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="360dp"
+        android:layout_height="wrap_content"
+        android:text="完成"
+        android:textSize="20dp"
+        android:textColor="@color/gray"
+        android:fontFamily="@font/iansul"
+        android:background="@drawable/button_roundel"/>
+
+        <TextView
+            android:id="@+id/tWrongCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/iansul"
+            android:text=""
+            android:textColor="#ff0000"
+            android:layout_marginTop="50dp"
+            android:textSize="14dp" />
+
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

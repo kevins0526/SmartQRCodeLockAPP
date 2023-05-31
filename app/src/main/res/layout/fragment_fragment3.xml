@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pic_02"
+    tools:context=".fragment3">
+
+    <Button
+        android:id="@+id/signOutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/button_roundel_white"
+        android:text="登出帳號"
+        android:fontFamily="@font/iansul"
+        android:textColor="@color/black"
+        android:textSize="35sp" />
+
+    <Button
+        android:id="@+id/profileBtn"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/button_roundel_white"
+        android:text="個人資料設定"
+        android:fontFamily="@font/iansul"
+        android:textColor="@color/black"
+        android:textSize="35sp" />
+
+<!--    <Button-->
+<!--        android:id="@+id/changeLockName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="25dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="25dp"-->
+<!--        android:background="@drawable/button_roundel_white"-->
+<!--        android:text="更改綁定門鎖"-->
+<!--        android:fontFamily="@font/iansul"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="35sp" />-->
+
+    <Button
+        android:id="@+id/clearLockRecord"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/button_roundel_white"
+        android:text="清除開鎖紀錄"
+        android:fontFamily="@font/iansul"
+        android:textColor="@color/black"
+        android:textSize="35sp" />
+</LinearLayout>

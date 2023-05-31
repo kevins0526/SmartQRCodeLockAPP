@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:background="@color/gray"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/ePhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:inputType="number"
+            android:hint="電話號碼"
+            android:fontFamily="@font/iansul"
+            android:textColor="@color/black"
+            android:textColorHint="#A9A9A9"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_roundel"
+            android:lines="1"/>
+
+        <EditText
+            android:id="@+id/eEmail"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:hint="電子信箱"
+            android:fontFamily="@font/iansul"
+            android:textColor="@color/black"
+            android:textColorHint="#A9A9A9"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_roundel"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="99dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/button_roundel"
+            android:text="完成"
+            android:fontFamily="@font/iansul"
+            android:textColor="@color/white"
+            android:textSize="20sp"></Button>
+    </LinearLayout>
+</RelativeLayout>

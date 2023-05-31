@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">QRLockApp</string>
+    <string name="foo">你好 世界!</string>
+    <string name="icon_msg">圖標</string>
+    <string name="vision">Beta</string>
+    <string name="name_msg"></string>
+    <string name="password_msg"></string>
+    <string name="name_hint">請輸入帳號</string>
+    <string name="password_hint">請輸入密碼</string>
+    <string name="login">登入</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message">訊息</string>
+    <string name="setting">設定</string>
+    <string name="qrcode">QRCode</string>
+    <string name="testpc">pc</string>
+    <string name="testptcure">testpc</string>
+    <string name="forgotPassword">忘記密碼?</string>
+    <string name="toolbar_title_forgot_account">忘記密碼</string>
+    <string name="forgotAccount_find_your_account">找回密碼</string>
+    <string name="forgotAccount_description">請輸入您的信箱，我們將會傳送信箱到您的郵件地址。並請您透過信箱去完成更改密碼的手續。 </string>
+    <string name="submit">送出</string>
+    <string name="forgotAccount_already_send_email">我們已經寄送更改密碼的信件到您信箱囉!</string>
+    <string name="password_icon">password_icon</string>
+    <string name="account_icon">account_icon</string>
+    <string name="qrcode_image">QRcode_image</string>
+    <string name="refresh">刷新</string>
+    <string name="guest_eky">訪客鑰匙</string>
+    <string name="title_activity_guest_key">guest_key</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="AES_KEY_PART3">531</string>
+
+</resources>

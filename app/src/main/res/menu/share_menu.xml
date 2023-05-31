@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/line"
+        android:title="LINE"
+        android:icon="@drawable/line_icon"/>
+    <item
+        android:id="@+id/messenger"
+        android:title="Messager"
+        android:icon="@drawable/messager_icon"/>
+</menu>

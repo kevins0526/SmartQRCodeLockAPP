@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "711873895854",
+    "project_id": "qrcodelock-46668",
+    "storage_bucket": "qrcodelock-46668.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711873895854:android:911ab56579fa463d477c3f",
+        "android_client_info": {
+          "package_name": "com.example.qrlockapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711873895854-kliudr515tskqnh6c7675vueuorhhrvi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC087AFCXyGkFNEbApcslOLyFNT-n7XV2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711873895854-kliudr515tskqnh6c7675vueuorhhrvi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
