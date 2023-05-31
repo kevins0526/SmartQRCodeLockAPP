@@ -8,6 +8,21 @@
     android:background="@drawable/qrlock_guestkey_bg"
     tools:context=".guestKey">
 
+    <TextView
+        android:id="@+id/tHour2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/iansul"
+        android:text="00時10分"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/timeBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/guestName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.811" />
+
     <Button
         android:id="@+id/back_btn"
         android:layout_width="36dp"
@@ -39,42 +54,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_roundel_blue"
-        android:text="新增訪客"
         android:fontFamily="@font/iansul"
+        android:text="新增訪客"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.91" />
+        app:layout_constraintVertical_bias="0.918" />
 
     <EditText
         android:id="@+id/guestName"
-        android:layout_width="261dp"
-        android:layout_height="51dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:background="@drawable/edit_text_roundel"
         android:ems="10"
-        android:maxLength="11"
-        android:hint="請輸入訪客姓名"
         android:fontFamily="@font/iansul"
+        android:hint="請輸入訪客姓名"
         android:inputType="textPersonName"
+        android:maxLength="11"
         android:text="@null"
         android:textColor="@color/black"
         android:textColorHint="#A9A9A9"
         app:layout_constraintBottom_toTopOf="@+id/requestGuestKey"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.977" />
+        app:layout_constraintVertical_bias="0.968" />
 
     <TextView
         android:id="@+id/countDownTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="歡迎使用訪客鑰匙"
+        android:textSize="18sp"
         android:fontFamily="@font/iansul"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,5 +114,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.91" />
+
+    <Button
+        android:id="@+id/timeBtn"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_roundel_white"
+        android:fontFamily="@font/iansul"
+        android:text="選擇時間"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toEndOf="@+id/guestName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.82" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

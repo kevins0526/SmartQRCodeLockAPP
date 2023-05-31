@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,23 +46,27 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class guestKey extends AppCompatActivity {
-    Button backBtn,requestGuestKeyBtn,shareBtn;
+    Button backBtn,requestGuestKeyBtn,shareBtn,btnSelectTime;
     ImageView guestQrcodeView;
     EditText guestNameEdit;
     public static String guestName;
     public static String guestPassword;
-    TextView countDownTimeTextView;
+    TextView countDownTimeTextView,tvSelectedTime;
     SharedPreferences pref;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     Bitmap bit;
     FirebaseAuth mAuth;
     long IV;
+    private int selectedHour;
+    private int selectedMinute;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
         backBtn = findViewById(R.id.back_btn);
+        btnSelectTime = findViewById(R.id.timeBtn);
+        tvSelectedTime = findViewById(R.id.tHour2);
         shareBtn = findViewById(R.id.shareBtn);
         requestGuestKeyBtn = findViewById(R.id.requestGuestKey);
         guestQrcodeView = findViewById(R.id.guestQrcode);
@@ -73,6 +79,8 @@ public class guestKey extends AppCompatActivity {
         if(app.switchGuest()){
             requestGuestKeyBtn.setVisibility(View.VISIBLE);
             guestNameEdit.setVisibility(View.VISIBLE);
+            btnSelectTime.setVisibility(View.VISIBLE);
+            tvSelectedTime.setVisibility(View.VISIBLE);
 //            shareBtn.setVisibility(View.GONE);
 //            requestGuestKeyBtn.setEnabled(true);
 //            clear();
@@ -81,9 +89,11 @@ public class guestKey extends AppCompatActivity {
             shareBtn.setVisibility(View.VISIBLE);
             requestGuestKeyBtn.setVisibility(View.GONE);
             guestNameEdit.setVisibility(View.GONE);
+            btnSelectTime.setVisibility(View.GONE);
+            tvSelectedTime.setVisibility(View.GONE);
             String tempKey=read();
             String endTime = readTime();
-            countDownTimeTextView.setText(guestName+"訪客鑰匙時效截止"+endTime);
+            countDownTimeTextView.setText(guestName+"訪客鑰匙時效截止\n"+endTime);
             BarcodeEncoder encoder1 = new BarcodeEncoder();
             Map<EncodeHintType, ErrorCorrectionLevel> hints = new EnumMap<>(EncodeHintType.class);
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q); // 設定容錯能力為 25%
@@ -94,22 +104,36 @@ public class guestKey extends AppCompatActivity {
                         e.printStackTrace();
                     }
         }
-//        DatabaseReference userNameRef =database.getReference("/userID/"+displayName+"/姓名");
-//        userNameRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                userName = snapshot.getValue(String.class);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        btnSelectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        selectedHour = hourOfDay;
+                        selectedMinute = minute;
+                        // 更新TextView的文本為選擇的時間
+                        String time = String.format("%02d時%02d分", selectedHour, selectedMinute);
+                        tvSelectedTime.setText(time);
+                        // 將選擇的小時和分鐘值傳遞到Service
+//                        Intent serviceIntent = new Intent(guestKey.this, CountdownService.class);
+//                        serviceIntent.putExtra("hour", selectedHour);
+//                        serviceIntent.putExtra("minute", selectedMinute);
+//                        startService(serviceIntent);
+                    }
+                };
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(guestKey.this,
+                        timeSetListener, selectedHour, selectedMinute, true);
+
+                timePickerDialog.show();
             }
         });
         requestGuestKeyBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +145,8 @@ public class guestKey extends AppCompatActivity {
                 }else {
                     requestGuestKeyBtn.setVisibility(View.GONE);
                     guestNameEdit.setVisibility(View.GONE);
+                    btnSelectTime.setVisibility(View.GONE);
+                    tvSelectedTime.setVisibility(View.GONE);
                     shareBtn.setVisibility(View.VISIBLE);
                     app.getSwitchGuest(false);
                     guestName = "Guest_" + name;
@@ -138,9 +164,11 @@ public class guestKey extends AppCompatActivity {
                         e.printStackTrace();
                     }
 //                  countDownTime();
-                    countDownTimeTextView.setText(name+"訪客鑰匙時效截止"+getDateTime());
+                    countDownTimeTextView.setText(guestName+"訪客鑰匙時效截止\n"+getDateTime());
                     saveTime();
                     Intent serviceIntent = new Intent(guestKey.this, CountdownService.class);
+                    serviceIntent.putExtra("hour", selectedHour); // 將值放入Intent中，"key"是鍵名，value是要傳遞的值
+                    serviceIntent.putExtra("min", selectedMinute); // 將值放入Intent中，"key"是鍵名，value是要傳遞的值
                     startService(serviceIntent);
                 }
                 //Toast.makeText(guestKey.this, guestName, Toast.LENGTH_SHORT).show();

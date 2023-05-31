@@ -25,10 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class CountdownService extends Service {
     private static final long COUNTDOWN_INTERVAL = 1000; // 1秒
-    private static final long TOTAL_COUNTDOWN_TIME = 10000; // 60秒
+    private static final long TOTAL_COUNTDOWN_TIME = 3600000; // 60秒
     private static final int NOTIFICATION_ID = 1;
     private static final String CHANNEL_ID = "CountdownChannel";
-    guestKey guestKeyInstance;
     private CountDownTimer countDownTimer;
     private long timeLeftInMillis;
     NotificationManager notificationManager;
@@ -50,12 +49,6 @@ public class CountdownService extends Service {
 
             @Override
             public void onFinish() {
-//                if (guestKeyInstance != null) {
-////                    guestKeyInstance.timeOver();
-////                    deleteAesPassword(guestPassword);
-//                    Toast.makeText(getApplication(), "test", Toast.LENGTH_SHORT).show();
-//
-//                }
                 // 倒计时结束时执行的操作
                 stopForeground(true); // 停止前台服务
                 deleteAesPassword(guestPassword);
@@ -69,9 +62,37 @@ public class CountdownService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (countDownTimer != null) {
+        if (intent != null) {
+            int selectedHour = intent.getIntExtra("hour", 0);
+            int selectedMinute = intent.getIntExtra("min", 0);
+
+            // 將選擇的小時和分鐘轉換為毫秒數
+            long selectedTimeInMillis = (selectedHour * 60 + selectedMinute) * 60 * 1000;
+
+            // 更新倒計時器的時間和間隔
+            timeLeftInMillis = selectedTimeInMillis;
+            countDownTimer = new CountDownTimer(timeLeftInMillis, COUNTDOWN_INTERVAL) {
+                // ... 倒計時器的onTick和onFinish方法
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timeLeftInMillis = millisUntilFinished;
+                    // 更新UI或执行其他必要的操作
+                }
+
+                @Override
+                public void onFinish() {
+                    // 倒计时结束时执行的操作
+                    stopForeground(true); // 停止前台服务
+                    deleteAesPassword(guestPassword);
+                    NotificationSend();
+                    final GlobalVariable app = (GlobalVariable) getApplication();
+                    app.getSwitchGuest(true);
+                    stopSelf(); // 停止Service
+                }
+            };
+
             startForeground(NOTIFICATION_ID, createNotification());
-            countDownTimer.start(); // 启动倒计时器
+            countDownTimer.start(); // 啟動倒計時器
         }
         return START_STICKY; // 确保Service在被系统杀死后重新启动
     }
