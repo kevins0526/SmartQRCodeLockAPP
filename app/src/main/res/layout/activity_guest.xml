@@ -105,15 +105,33 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_roundel_blue"
         android:fontFamily="@font/iansul"
-        android:text="分享QR Key"
+        android:text="分享鑰匙"
         android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.229"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.91" />
+        app:layout_constraintVertical_bias="0.918" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_roundel_blue"
+        android:fontFamily="@font/iansul"
+        android:text="收回鑰匙"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.773"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.918" />
 
     <Button
         android:id="@+id/timeBtn"

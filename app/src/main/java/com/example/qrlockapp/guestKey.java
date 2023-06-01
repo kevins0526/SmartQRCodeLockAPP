@@ -2,7 +2,6 @@ package com.example.qrlockapp;
 
 import static com.example.qrlockapp.GlobalVariable.lockName;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -15,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,12 +25,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -46,7 +40,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class guestKey extends AppCompatActivity {
-    Button backBtn,requestGuestKeyBtn,shareBtn,btnSelectTime;
+    Button backBtn,requestGuestKeyBtn,shareBtn,btnSelectTime,deleteBtn;
     ImageView guestQrcodeView;
     EditText guestNameEdit;
     public static String guestName;
@@ -57,8 +51,8 @@ public class guestKey extends AppCompatActivity {
     Bitmap bit;
     FirebaseAuth mAuth;
     long IV;
-    private int selectedHour;
-    private int selectedMinute;
+    int selectedHour=0;
+    int selectedMinute=10;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,25 +62,22 @@ public class guestKey extends AppCompatActivity {
         btnSelectTime = findViewById(R.id.timeBtn);
         tvSelectedTime = findViewById(R.id.tHour2);
         shareBtn = findViewById(R.id.shareBtn);
+        deleteBtn = findViewById(R.id.deleteBtn);
         requestGuestKeyBtn = findViewById(R.id.requestGuestKey);
         guestQrcodeView = findViewById(R.id.guestQrcode);
         guestNameEdit = findViewById(R.id.guestName);
         countDownTimeTextView = findViewById(R.id.countDownTime);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user=mAuth.getCurrentUser();
-        String displayName = user.getDisplayName();
+
         final GlobalVariable app = (GlobalVariable) getApplication();
         if(app.switchGuest()){
             requestGuestKeyBtn.setVisibility(View.VISIBLE);
             guestNameEdit.setVisibility(View.VISIBLE);
             btnSelectTime.setVisibility(View.VISIBLE);
             tvSelectedTime.setVisibility(View.VISIBLE);
-//            shareBtn.setVisibility(View.GONE);
-//            requestGuestKeyBtn.setEnabled(true);
-//            clear();
         }else{
-            //requestGuestKeyBtn.setEnabled(false);
             shareBtn.setVisibility(View.VISIBLE);
+            deleteBtn.setVisibility(View.VISIBLE);
             requestGuestKeyBtn.setVisibility(View.GONE);
             guestNameEdit.setVisibility(View.GONE);
             btnSelectTime.setVisibility(View.GONE);
@@ -122,11 +113,6 @@ public class guestKey extends AppCompatActivity {
                         // 更新TextView的文本為選擇的時間
                         String time = String.format("%02d時%02d分", selectedHour, selectedMinute);
                         tvSelectedTime.setText(time);
-                        // 將選擇的小時和分鐘值傳遞到Service
-//                        Intent serviceIntent = new Intent(guestKey.this, CountdownService.class);
-//                        serviceIntent.putExtra("hour", selectedHour);
-//                        serviceIntent.putExtra("minute", selectedMinute);
-//                        startService(serviceIntent);
                     }
                 };
 
@@ -148,6 +134,7 @@ public class guestKey extends AppCompatActivity {
                     btnSelectTime.setVisibility(View.GONE);
                     tvSelectedTime.setVisibility(View.GONE);
                     shareBtn.setVisibility(View.VISIBLE);
+                    deleteBtn.setVisibility(View.VISIBLE);
                     app.getSwitchGuest(false);
                     guestName = "Guest_" + name;
                     IV = Randomize.IV();
@@ -164,7 +151,8 @@ public class guestKey extends AppCompatActivity {
                         e.printStackTrace();
                     }
 //                  countDownTime();
-                    countDownTimeTextView.setText(guestName+"訪客鑰匙時效截止\n"+getDateTime());
+                    String dateTime = getDateTime(selectedHour, selectedMinute);
+                    countDownTimeTextView.setText(guestName+"訪客鑰匙時效截止\n"+dateTime);
                     saveTime();
                     Intent serviceIntent = new Intent(guestKey.this, CountdownService.class);
                     serviceIntent.putExtra("hour", selectedHour); // 將值放入Intent中，"key"是鍵名，value是要傳遞的值
@@ -222,6 +210,21 @@ public class guestKey extends AppCompatActivity {
                 }
             }
         });
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteAesPassword(guestPassword);
+                clear();
+                countDownTimeTextView.setText("可以新增訪客鑰匙囉~");
+                shareBtn.setVisibility(View.GONE);
+                deleteBtn.setVisibility(View.GONE);
+                requestGuestKeyBtn.setVisibility(View.VISIBLE);
+                btnSelectTime.setVisibility(View.VISIBLE);
+                guestNameEdit.setVisibility(View.VISIBLE);
+                tvSelectedTime.setVisibility(View.VISIBLE);
+                app.getSwitchGuest(true); //時間過後再進才能重新生成
+            }
+        });
     }
     public void updateAesPassword(String aesPassword,String IV){
         DatabaseReference userPassword =database.getReference("/aesPassword/"+lockName+"/"+aesPassword);
@@ -233,36 +236,7 @@ public class guestKey extends AppCompatActivity {
         DatabaseReference deleteUserID =database.getReference("/userID/"+guestName);
         deleteUserID.removeValue();
     }
-    public void countDownTime(){
-        final GlobalVariable app = (GlobalVariable) getApplication();
-       new CountDownTimer(60000, 1000) {
-            //int time = 60000*30;
-            int time = 60;
-            @Override
-            public void onTick(long millisUntilFinished) {
-                countDownTimeTextView.setText("訪客鑰匙 "+time+" 秒後失效!");
-                time--;
-            }
-            @Override
-            public void onFinish() {//结束后的操作
-                deleteAesPassword(guestPassword);
-                clear();
-                countDownTimeTextView.setText("可以新增訪客鑰匙囉~");
-                shareBtn.setVisibility(View.GONE);
-                requestGuestKeyBtn.setEnabled(true);
-                app.getSwitchGuest(true); //時間過後再進才能重新生成
-            }
-        }.start();
-    }
-//    public void timeOver(){
-//
-//        deleteAesPassword(guestPassword);
-//        clear();
-//        countDownTimeTextView.setText("可以新增訪客鑰匙囉~");
-//        shareBtn.setVisibility(View.GONE);
-//        requestGuestKeyBtn.setEnabled(true);
-//        app.getSwitchGuest(true); //時間過後再進才能重新生成
-//    }
+
     public void saveName(){
         pref = getSharedPreferences("DATA",MODE_PRIVATE);
         pref.edit()
@@ -272,8 +246,9 @@ public class guestKey extends AppCompatActivity {
     }
     public void saveTime(){
         pref = getSharedPreferences("DATA",MODE_PRIVATE);
+        String dateTime = getDateTime(selectedHour, selectedMinute);
         pref.edit()
-                .putString("TIME",getDateTime())
+                .putString("TIME",dateTime)
                 .apply();                   //或commit()
     }
     public String readTime(){
@@ -296,14 +271,15 @@ public class guestKey extends AppCompatActivity {
         editor.clear();
         editor.commit();
     }
-    private String getDateTime() {
-        // 獲取當前時間
+    private String getDateTime(int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
-        // 添加30分鐘
-        calendar.add(Calendar.SECOND, 10);
-        // 將時間格式化為你需要的格式
+        // 添加所选的小时和分钟
+        calendar.add(Calendar.HOUR_OF_DAY, hour);
+        calendar.add(Calendar.MINUTE, minute);
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
         String newTime = sdf.format(calendar.getTime());
         return newTime;
     }
+
 }
