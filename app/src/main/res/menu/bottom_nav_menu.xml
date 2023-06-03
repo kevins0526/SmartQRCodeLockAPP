@@ -13,7 +13,7 @@
     <item
         android:id="@+id/navigation_item4"
         android:icon="@drawable/ic_baseline_chat_24"
-        android:title="布告欄"
+        android:title="佈告欄"
         android:fontFamily="@font/iansul"/>
     <item
         android:id="@+id/navigation_item3"
