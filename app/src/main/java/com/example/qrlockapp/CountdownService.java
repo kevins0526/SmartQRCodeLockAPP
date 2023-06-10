@@ -83,8 +83,8 @@ public class CountdownService extends Service {
                 public void onFinish() {
                     // 倒计时结束时执行的操作
                     stopForeground(true); // 停止前台服务
-                    deleteAesPassword(guestPassword);
-                    NotificationSend();
+//                    deleteAesPassword(guestPassword);
+//                    NotificationSend();
                     final GlobalVariable app = (GlobalVariable) getApplication();
                     app.getSwitchGuest(true);
                     stopSelf(); // 停止Service
@@ -102,6 +102,8 @@ public class CountdownService extends Service {
 //        if (countDownTimer != null) {
 //            countDownTimer.cancel(); // 取消倒计时器
 //        }
+        deleteAesPassword(guestPassword);
+        NotificationSend();
         super.onDestroy();
     }
 

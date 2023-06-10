@@ -213,6 +213,9 @@ public class guestKey extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 停止服务
+                Intent stopIntent = new Intent(guestKey.this, CountdownService.class);
+                stopService(stopIntent);
                 deleteAesPassword(guestPassword);
                 clear();
                 countDownTimeTextView.setText("可以新增訪客鑰匙囉~");
@@ -222,6 +225,7 @@ public class guestKey extends AppCompatActivity {
                 btnSelectTime.setVisibility(View.VISIBLE);
                 guestNameEdit.setVisibility(View.VISIBLE);
                 tvSelectedTime.setVisibility(View.VISIBLE);
+                guestQrcodeView.setImageBitmap(null);
                 app.getSwitchGuest(true); //時間過後再進才能重新生成
             }
         });
