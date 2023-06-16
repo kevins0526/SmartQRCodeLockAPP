@@ -9,6 +9,7 @@ public class GlobalVariable extends Application {
     public static String lockName; //門鎖代碼
     public  static String aesPassword;
     public static boolean switchGuest = true;
+    public static boolean isServerRun = true;
     private SharedPreferences pref;//暫時存取字串用
     public boolean switchGuest(){
         return this.switchGuest;

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SharedPreferences pref;//暫時存取字串用
@@ -49,10 +54,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        Intent serviceIntent = new Intent(this, ServiceSetup.class);
 
-        startService(serviceIntent);
+//        Intent serviceIntent = new Intent(this, ServiceSetup.class);
+//        startService(serviceIntent);
+
         GlobalVariable gv = (GlobalVariable)getApplicationContext();
+        // 检查是否是第一次使用应用程序
+        boolean isFirstTime = checkIfFirstTime();
+        // 如果是第一次使用应用程序，则启动前台服务
+        if (isFirstTime) {
+            Intent serviceIntent = new Intent(this, ServiceSetup.class);
+            startService(serviceIntent);
+        }
         Button button = findViewById(R.id.button);
         TextView textView = findViewById(R.id.forgotPassword);
         mAuth = FirebaseAuth.getInstance();
@@ -149,4 +162,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private boolean checkIfFirstTime() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        boolean isFirstTime = sharedPreferences.getBoolean("isFirstTime", true);
+
+        if (isFirstTime) {
+            // 标记为已使用过应用程序
+            sharedPreferences.edit().putBoolean("isFirstTime", false).apply();
+        }
+
+        return isFirstTime;
+    }
+
 }
