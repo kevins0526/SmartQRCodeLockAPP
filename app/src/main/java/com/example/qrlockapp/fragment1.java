@@ -141,7 +141,9 @@ public class fragment1 extends Fragment{
         }
     }
     public void getCode() {
-        deleteAesPassword(aesPassword);
+        if(!aesPassword.equals("")) {
+            deleteAesPassword(aesPassword);
+        }
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user=mAuth.getCurrentUser();
         displayName = user.getDisplayName();
@@ -193,6 +195,8 @@ public class fragment1 extends Fragment{
         });
     }
     public void deleteAesPassword(String aesPassword){
+        Log.w("TAG",lockName);
+        Log.w("TAG",aesPassword);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userPassword =database.getReference("/aesPassword/"+lockName+"/"+aesPassword);
         userPassword.removeValue();
