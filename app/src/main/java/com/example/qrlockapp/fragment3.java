@@ -1,6 +1,7 @@
 package com.example.qrlockapp;
 
 
+import static com.example.qrlockapp.GlobalVariable.aesPassword;
 import static com.example.qrlockapp.GlobalVariable.lockName;
 
 import android.app.ActivityManager;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,8 +22,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -31,6 +36,7 @@ public class fragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fragment3, container, false);
+        GlobalVariable gv = (GlobalVariable) getActivity().getApplication();
         Button profileBtn,signOutBtn,clearLockBtn,protectBtn;
         profileBtn = view.findViewById(R.id.profileBtn);
         signOutBtn = view.findViewById(R.id.signOutBtn);
@@ -55,6 +61,8 @@ public class fragment3 extends Fragment {
 
                 changeIsSingin changeIsSingin = new changeIsSingin(getActivity());
                 changeIsSingin.putBoolean(IsSingin.KEY_IS_SINGIN,false);
+                deleteAesPassword(aesPassword);
+                gv.clearAesPassword();
                 lockName = null;
                 if (isServiceRunning()) {
                     // 关闭前台服务
@@ -127,5 +135,9 @@ public class fragment3 extends Fragment {
         // 没有找到前台服务，返回 false
         return false;
     }
-
+    public void deleteAesPassword(String aesPassword){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userPassword =database.getReference("/aesPassword/"+lockName+"/"+aesPassword);
+        userPassword.removeValue();
+    }
 }

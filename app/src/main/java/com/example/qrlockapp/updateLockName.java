@@ -44,9 +44,9 @@ public class updateLockName extends AppCompatActivity {
         tNowLockName = findViewById(R.id.tNowLockName);
         FirebaseUser user = mAuth.getCurrentUser();
         updateLockName_Btn = findViewById(R.id.updateLockName_Btn);
-        if(!gv.getLockName().equals("")){
-            tNowLockName.setText("目前綁定門鎖為:"+gv.getLockName());
-        }
+//        if(!gv.getLockName().equals("")){
+//            tNowLockName.setText("目前綁定門鎖為:"+gv.getLockName());
+//        }
         updateLockName_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

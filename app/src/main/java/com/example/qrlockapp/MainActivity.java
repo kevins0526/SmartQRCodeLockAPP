@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private Button login;
     private CheckBox rememberPass;
+    public GlobalVariable gv; // 声明全局的 GlobalVariable 变量
     Activity context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +56,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-//        Intent serviceIntent = new Intent(this, ServiceSetup.class);
-//        startService(serviceIntent);
-
-        GlobalVariable gv = (GlobalVariable)getApplicationContext();
+        gv = (GlobalVariable) getApplication(); // 初始化 GlobalVariable 实例
+//        GlobalVariable gv = (GlobalVariable)getApplicationContext();
         // 检查是否是第一次使用应用程序
         boolean isFirstTime = checkIfFirstTime();
         // 如果是第一次使用应用程序，则启动前台服务
@@ -89,18 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 //調用
                 EditText txtUsername = findViewById(R.id.etUsername);
                 EditText txtPassword = findViewById(R.id.etPassword);
-//                //取值
+               //取值
                 String username = txtUsername.getText().toString();
                 String password = txtPassword.getText().toString();
-                //firebase註冊
-//                mAuth.createUserWithEmailAndPassword(username,password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if(task.isSuccessful()){
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                        }
-//                    }
-//                });
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     String msg = "帳號或密碼不得為空白!";
                     TextView wrongPassword = findViewById(R.id.wrong);

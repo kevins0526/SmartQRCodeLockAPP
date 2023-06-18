@@ -4,6 +4,7 @@ package com.example.qrlockapp;
 import static android.content.Context.MODE_PRIVATE;
 
 import static com.example.qrlockapp.GlobalVariable.aesPassword;
+import static com.example.qrlockapp.GlobalVariable.displayName;
 import static com.example.qrlockapp.GlobalVariable.lockName;
 
 import android.content.Intent;
@@ -45,8 +46,9 @@ public class fragment1 extends Fragment{
     private FirebaseAuth mAuth;
     Button CreateBtn,GuestBtn;
     SharedPreferences pref;
-    String displayName;
     ImageView ivCode;
+    String displayName="";
+    private GlobalVariable gv;
     long IV;
     private ValueEventListener loginTimeListener; //紀錄監聽器 防止多監聽器出現
     @Override
@@ -57,21 +59,34 @@ public class fragment1 extends Fragment{
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user=mAuth.getCurrentUser();
+        gv = (GlobalVariable) getActivity().getApplication();
         displayName = user.getDisplayName();
-        ivCode = (ImageView)myView.findViewById(R.id.imageView4);
-        if(!displayName.equals(readDisplayName())){
-            aesPassword = "";
-            getCode();
-        }else{
-            aesPassword = readKey();
-            BarcodeEncoder encoder = new BarcodeEncoder();
-            try {
-                Bitmap bit = encoder.encodeBitmap(aesPassword, BarcodeFormat.QR_CODE, 1000, 1000);
-                ivCode.setImageBitmap(bit);
-            } catch (WriterException e) {
-                e.printStackTrace();
+        aesPassword = gv.readAesPassword();
+        DatabaseReference lockRef = database.getReference("/userID/"+displayName+"/lockName");
+        lockRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                gv.saveLock(snapshot.getValue(String.class));
+                ivCode = (ImageView)myView.findViewById(R.id.imageView4);
+                if(aesPassword.equals("")){
+                    lockName = gv.readLock();
+                    getCode();
+                }else{
+                        BarcodeEncoder encoder = new BarcodeEncoder();
+                        try {
+                            Bitmap bit = encoder.encodeBitmap(aesPassword, BarcodeFormat.QR_CODE, 1000, 1000);
+                            ivCode.setImageBitmap(bit);
+                        } catch (WriterException e) {
+                            e.printStackTrace();
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         CreateBtn = (Button) myView.findViewById(R.id.create_btn);
         GuestBtn = (Button) myView.findViewById(R.id.guest_btn);
@@ -133,7 +148,10 @@ public class fragment1 extends Fragment{
         IV=Randomize.IV();
         aesPassword=AEScbc.encrypt(displayName,String.valueOf(IV));
         updateAesPassword(aesPassword,String.valueOf(IV));
-        saveKey();
+
+        gv.saveAesPassword(aesPassword);
+        gv.saveDisplayName(displayName);
+
         BarcodeEncoder encoder = new BarcodeEncoder();
         Map<EncodeHintType, ErrorCorrectionLevel> hints = new EnumMap<>(EncodeHintType.class);
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q); // 設定容錯能力為 25%
@@ -148,13 +166,14 @@ public class fragment1 extends Fragment{
         Intent intent = new Intent(getActivity(),guestKey.class);
         startActivity(intent);
     }
-    public void saveKey(){
-        pref.edit()
-                .putString("KEY",aesPassword)
-                .putString("DisplayName",displayName)
-                .apply();                   //或commit()
-    }
+//    public void saveKey(){
+//        pref.edit()
+//                .putString("KEY",aesPassword)
+//                .putString("DisplayName",displayName)
+//                .apply();                   //或commit()
+//    }
     public void updateAesPassword(String aesPassword,String IV){
+        lockName = gv.readLock();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userPassword =database.getReference("/aesPassword/"+lockName+"/"+aesPassword);
         userPassword.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -178,9 +197,9 @@ public class fragment1 extends Fragment{
         DatabaseReference userPassword =database.getReference("/aesPassword/"+lockName+"/"+aesPassword);
         userPassword.removeValue();
     }
-    public String readKey(){
-        return pref.getString("KEY","");
-    }
+//    public String readKey(){
+//        return pref.getString("KEY","");
+//    }
     public String readDisplayName(){
         return pref.getString("DisplayName","");
     }
