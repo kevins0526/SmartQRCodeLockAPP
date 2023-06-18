@@ -7,7 +7,7 @@ import android.util.Log;
 public class GlobalVariable extends Application {
     // 定義全域變數
     public static String lockName; //門鎖代碼
-    public  static String aesPassword;
+    public  static String aesPassword ="";
     public static boolean switchGuest = true;
     public static boolean isServerRun = true;
     private SharedPreferences pref;//暫時存取字串用

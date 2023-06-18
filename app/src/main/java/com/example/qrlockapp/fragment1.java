@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.BarcodeFormat;
@@ -46,21 +48,18 @@ public class fragment1 extends Fragment{
     String displayName;
     ImageView ivCode;
     long IV;
+    private ValueEventListener loginTimeListener; //紀錄監聽器 防止多監聽器出現
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  //fragment 視圖
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_fragment1, container, false);
-        //AEScbc.getFloor();
         pref = getActivity().getSharedPreferences("PREF",MODE_PRIVATE);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user=mAuth.getCurrentUser();
         displayName = user.getDisplayName();
         ivCode = (ImageView)myView.findViewById(R.id.imageView4);
-
         if(!displayName.equals(readDisplayName())){
-            //deleteAesPassword(aesPassword);
             aesPassword = "";
             getCode();
         }else{
@@ -81,7 +80,6 @@ public class fragment1 extends Fragment{
             @Override
             public void onClick(View view) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                //deleteAesPassword(aesPassword);
                 getCode();
             }
         });
@@ -93,25 +91,40 @@ public class fragment1 extends Fragment{
         });
         displayName = user.getDisplayName();
         DatabaseReference loginTime = database.getReference("/userID/"+displayName+"/loginTime");
-        loginTime.addValueEventListener(new ValueEventListener() {
-            int times = 0;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                if(times>0) {
-                    //deleteAesPassword(aesPassword);
-                    getCode();
+    // 检查监听器是否为 null，避免重复添加
+        if (loginTimeListener == null) {
+            loginTimeListener = new ValueEventListener() {
+                int times = 0;
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (times > 0) {
+                        getCode();
+                    }
+                    times++;
                 }
-                times++;
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            };
+
+            // 添加监听器
+            loginTime.addValueEventListener(loginTimeListener);
+        }
+
         return  myView;
     }
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        // 在退出 Fragment 时移除监听器
+        if (loginTimeListener != null) {
+            DatabaseReference loginTime = database.getReference("/userID/" + displayName + "/loginTime");
+            loginTime.removeEventListener(loginTimeListener);
+            loginTimeListener = null;
+        }
+    }
     public void getCode() {
         deleteAesPassword(aesPassword);
         mAuth = FirebaseAuth.getInstance();
@@ -148,11 +161,9 @@ public class fragment1 extends Fragment{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // 路徑已存在，執行更新資料的程式碼
                     getCode();
                 }
                 else {
-                    // 路徑不存在，執行新增資料的程式碼
                     userPassword.setValue(IV);
                 }
             }

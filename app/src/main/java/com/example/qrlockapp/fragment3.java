@@ -56,8 +56,11 @@ public class fragment3 extends Fragment {
                 changeIsSingin changeIsSingin = new changeIsSingin(getActivity());
                 changeIsSingin.putBoolean(IsSingin.KEY_IS_SINGIN,false);
                 lockName = null;
-                requireActivity().stopService(new Intent(requireContext(), ServiceSetup.class));
-                Toast.makeText(getActivity(), "門鎖管家已關閉", Toast.LENGTH_SHORT).show();
+                if (isServiceRunning()) {
+                    // 关闭前台服务
+                    requireActivity().stopService(new Intent(requireContext(), ServiceSetup.class));
+                    Toast.makeText(getActivity(), "門鎖管家已關閉", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         clearLockBtn.setOnClickListener(new View.OnClickListener() {
